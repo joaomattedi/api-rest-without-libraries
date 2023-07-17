@@ -16,4 +16,25 @@ export class Database {
   #persist() {
     fs.writeFile(databasePath, JSON.stringify(this.#database));
   }
+
+  countTableData(table) {
+    const data = this.#database[table] ?? []
+
+    return data.length
+  }
+
+  insert(table, data) {
+    const id = this.countTableData(table) + 1;
+    const task = { id, ...data }
+
+    if (Array.isArray(this.#database[table])) {
+      this.#database.push(task)
+    } else {
+      this.#database[table] = [task]
+    }
+
+    this.#persist()
+
+    return { statusCode: 201, message: 'Task created' }
+  }
 }
