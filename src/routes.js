@@ -28,5 +28,14 @@ export const routes = [
 
       return res.writeHead(ret.statusCode).end(JSON.stringify(ret.message));
     }
-  }
+  },
+  {
+    method: 'GET',
+    path: '/tasks',
+    handler: (req,res) => {
+      const ret = database.getAll('tasks');
+
+      return res.writeHead(ret.statusCode).end(JSON.stringify(ret.message));
+    }
+  },
 ]

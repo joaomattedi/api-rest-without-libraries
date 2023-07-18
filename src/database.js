@@ -28,7 +28,7 @@ export class Database {
     const task = { id, ...data }
 
     if (Array.isArray(this.#database[table])) {
-      this.#database.push(task)
+      this.#database[table].push(task)
     } else {
       this.#database[table] = [task]
     }
@@ -36,5 +36,11 @@ export class Database {
     this.#persist()
 
     return { statusCode: 201, message: 'Task created' }
+  }
+
+  getAll(table) {
+    const data = this.#database[table]
+
+    return { statusCode: 200, message: data }
   }
 }
