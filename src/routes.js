@@ -1,12 +1,13 @@
 import { Database } from "./database.js";
 import { validateTaskCreation } from "./middlewares/validateTaskCreation.js";
+import { buildRoutePath } from "./utils/buildRoutePath.js";
 
 const database = new Database();
 
 export const routes = [
   {
     method: 'POST',
-    path: '/task',
+    path:buildRoutePath('/task'),
     handler: (req,res) => {
       const { title, description } = req.body;
 
@@ -31,11 +32,19 @@ export const routes = [
   },
   {
     method: 'GET',
-    path: '/tasks',
+    path:buildRoutePath('/tasks'),
     handler: (req,res) => {
       const ret = database.getAll('tasks');
 
       return res.writeHead(ret.statusCode).end(JSON.stringify(ret.message));
+    }
+  },
+  {
+    method: 'DELETE',
+    path:buildRoutePath('/task/:id'),
+    handler: (req,res) => {
+
+      return res.writeHead(200).end(JSON.stringify('teste'));
     }
   },
 ]
