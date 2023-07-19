@@ -17,14 +17,14 @@ export class Database {
     fs.writeFile(databasePath, JSON.stringify(this.#database));
   }
 
-  countTableData(table) {
+  getNewIdFromTable(table) {
     const data = this.#database[table] ?? []
 
-    return data.length
+    return data.length === 0 ? 1 : (this.#database[table][data.length - 1].id + 1)
   }
 
   insert(table, data) {
-    const id = this.countTableData(table) + 1;
+    const id = this.getNewIdFromTable(table);
     const task = { id, ...data }
 
     if (Array.isArray(this.#database[table])) {
@@ -42,5 +42,16 @@ export class Database {
     const data = this.#database[table]
 
     return { statusCode: 200, message: data }
+  }
+
+  delete(table,primaryKey) {
+    const rowIndex = this.#database[table].findIndex(row => row.id.toString() === primaryKey.toString())
+
+    if (rowIndex > -1) {
+      this.#database[table].splice(rowIndex,1)
+      this.#persist()
+    }
+
+    return { statusCode: 204, message: '' }
   }
 }
