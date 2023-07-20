@@ -73,4 +73,30 @@ export class Database {
 
     return { statusCode: 200, message: data }
   }
+
+  checkComplete(table,id) {
+    const rowIndex = this.#database[table].findIndex(row => row.id.toString() === id.toString())
+
+    if (rowIndex > -1) {
+      const oldRow = this.#database[table][rowIndex]
+      if (oldRow.completed_at === null) {
+        this.#database[table][rowIndex] = {
+          ...oldRow,
+          updated_at: new Date(),
+          completed_at: new Date(),
+        }
+      } else {
+        this.#database[table][rowIndex] = {
+          ...oldRow,
+          updated_at: new Date(),
+          completed_at: null
+        }
+      }
+      this.#persist()
+    }else {
+      return { statusCode: 500, message: 'ID not found' }
+    }
+    
+    return { statusCode: 200, message: this.#database[table][rowIndex] }
+  }
 }

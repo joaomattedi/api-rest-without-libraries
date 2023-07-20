@@ -7,7 +7,7 @@ const database = new Database();
 export const routes = [
   {
     method: 'POST',
-    path:buildRoutePath('/task'),
+    path:buildRoutePath('/tasks'),
     handler: (req,res) => {
       const { title, description } = req.body;
 
@@ -41,7 +41,7 @@ export const routes = [
   },
   {
     method: 'DELETE',
-    path:buildRoutePath('/task/:id'),
+    path:buildRoutePath('/tasks/:id'),
     handler: (req,res) => {
       const { id } = req.params
 
@@ -52,7 +52,7 @@ export const routes = [
   },
   {
     method: 'PUT',
-    path:buildRoutePath('/task/:id'),
+    path:buildRoutePath('/tasks/:id'),
     handler: (req,res) => {
       const { id } = req.params
       const { title, description } = req.body;
@@ -69,6 +69,17 @@ export const routes = [
       }
 
       const ret = database.update('tasks',id,task)
+
+      return res.writeHead(ret.statusCode).end(JSON.stringify(ret.message));
+    }
+  },
+  {
+    method: 'PATCH',
+    path:buildRoutePath('/tasks/:id/complete'),
+    handler: (req,res) => {
+      const { id } = req.params
+
+      const ret = database.checkComplete('tasks',id)
 
       return res.writeHead(ret.statusCode).end(JSON.stringify(ret.message));
     }
