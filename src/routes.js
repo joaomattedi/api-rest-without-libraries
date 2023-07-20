@@ -50,4 +50,27 @@ export const routes = [
       return res.writeHead(ret.statusCode).end(ret.message);
     }
   },
+  {
+    method: 'PUT',
+    path:buildRoutePath('/task/:id'),
+    handler: (req,res) => {
+      const { id } = req.params
+      const { title, description } = req.body;
+      
+      const task = {
+        title,
+        description,
+      }
+
+      const verified = validateTaskCreation(task);
+      
+      if (!verified.valid) {
+        return res.writeHead(400).end(JSON.stringify(verified.message))
+      }
+
+      const ret = database.update('tasks',id,task)
+
+      return res.writeHead(ret.statusCode).end(JSON.stringify(ret.message));
+    }
+  },
 ]

@@ -54,4 +54,23 @@ export class Database {
 
     return { statusCode: 204, message: '' }
   }
+
+  update(table,id,data) {
+    const rowIndex = this.#database[table].findIndex(row => row.id.toString() === id.toString())
+
+    if (rowIndex > -1) {
+      const oldRow = this.#database[table][rowIndex]
+      this.#database[table][rowIndex] = {
+        ...oldRow,
+        title: data.title,
+        description: data.description,
+        updated_at: new Date()
+      }
+      this.#persist()
+    } else {
+      return { statusCode: 500, message: 'ID not found' }
+    }
+
+    return { statusCode: 200, message: data }
+  }
 }
